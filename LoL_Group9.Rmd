@@ -1,5 +1,6 @@
 ---
-title: "LoL_Group9"
+title: "League of Legends Project"
+author: "Group 9 - Ziyue Chen, Rishabh Kaushik, Vera Meanti, Aman Sharma, Sarah Wu, Stephen Zhu"
 output: html_document
 ---
 
@@ -10,17 +11,28 @@ knitr::opts_chunk$set(echo = TRUE)
 (1) A statement of the question or purpose. What problems or questions did you set out to analyse?
 What were the key issues raised?
 
-League of Legends is a Multiplayer Online Battle Arena (MOBA) game. For this project we have data on the first 10 minutes of 10,000 games.
-All of these games are diamond-ranked, which means the players are in the top 1.5% to 0.19% of players worldwide.
+League of Legends is a Multiplayer Online Battle Arena (MOBA) game. For this project we have data on the first 10 minutes of 10,000 games. All of these games are diamond-ranked, which means the players are in the top 1.5% to 0.19% of players worldwide. The game lasts approximately 20 to 30 mins, there are two teams (Red vs Blue), with 5 players each. The goal of the game is to take down the enemy Nexus. 
+
+The main variables in our data are: 
+- Game_ID -> unique identifier for each game 
+- Blue_wins -> '0' if the Blue Team won the game, '1' if the Red team won. 
+- Other 19 variables per team (38 total) -> Statistics and features of the game collected after 10 minuted of playing. These include number of kills, deaths, average experience and level and more. 
+
+Our purpose is to explore what is the best strategy in the first 10mins of playing, to win League of Legends. 
 
 (2) The background and preparation for conducting the project. How did you prepare for the project?
 What sources or background readings did you consult? What information did you use in developing
 your ideas from the conceptual stage to the finished project?
+
+As not all of us were familiar with the League of Legends game, we had to conduct some research to really understand the game and the variables in the dataset. All our group members played the game to immerse ourselves in the League of Legends world and understand what stories could be told from the data. 
+
 (3) Methodology. What did you do, and how did you do it? What statistical techniques did you use —
 for instance, scatterplots, correlation, confidence intervals, linear/logistic regression?
+
 (4) Results and conclusions. This is where you summarise and present your data analyses and
 communicate your main results. What did you find out? This might include tables, graphs, or verbal
 summaries. What did you learn about the problem or question you set out to investigate?
+
 (5) Discussion and critique. What did you learn about the process of carrying out your project? What
 went wrong, and how could you improve it next time? For instance, did any sources of bias creep into
 your survey or experiment? What advice would you give future students? 
@@ -61,13 +73,17 @@ dupes <- raw_lol_data %>%
 
 #Cleaning the data
 clean_lol_data <- raw_lol_data %>% 
-  #we saw that there were duplicate columns between the blue and the red variables, so we decided to drop the red and keep the blue
+  # There are duplicate columns between the blue and the red variables, so we decided to drop the red and keep the blue
   select(-red_first_blood, -red_gold_diff) %>% 
   # We added a column that shows the average level difference between the blue and the red teams
-  mutate(avg_level_diff = blue_avg_level - red_avg_level)
+  mutate(avg_level_diff = blue_avg_level - red_avg_level) %>% 
+  # Changing two variables to be discrete instead of continuous 
+  mutate(blue_wins = as.factor(blue_wins)) %>% 
+  mutate(blue_first_blood = as.factor(blue_first_blood)) %>% 
+  mutate(blue_KDA = (blue_kills + blue_assists)/blue_deaths, red_KDA = (red_kills + red_assists)/red_deaths)
 
-clean_lol_data
-
+# Making sure the clean data is correct
+skimr::skim(clean_lol_data)
 
 ```
 
@@ -81,6 +97,7 @@ Corr <- Corr_clean_lol_data %>%
 Corr
 
 ```
+
 
 ```{r Regression}
 # Regression
@@ -121,6 +138,43 @@ plot1 <- ggplot(plot_log, aes(x=avg_level_diff)) +
   geom_point(aes(y=blue_wins), alpha = 0.2) +
   NULL
 plot1
-
-
 ```
+>>>>>>> 36b87ef127fb10f98ed57363c4b20f6c61e1dee4
+
+```{r Sarah}
+clean_lol_data %>% ggplot(aes(x = blue_gold_per_min, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
+  geom_point(alpha = 0.1) +
+  geom_jitter(width = 0.25) +
+  scale_colour_manual(values = c("red", "blue"),
+                      # breaks=c("0","1"),
+                      labels=c("Red Team Wins", "Blue Team Wins")) +
+  theme_minimal() +
+  labs(
+    title = "More Assists and Higher Gold Rate Lead to More Wins for Blue Team",
+    subtitle = "Assists by Blue Team vs. Gold Difference",
+    y = "Number of Assists",
+    x = "Gold Per Minute")+
+  theme(legend.title=element_blank())
+```
+
+```{r}
+clean_lol_data %>% ggplot(aes(x = blue_kills, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
+  geom_point(alpha = 0.8, size = 0.9) +
+  geom_jitter() +
+  scale_colour_manual(values = c("red", "blue"),
+                      # breaks=c("0","1"),
+                      labels=c("Red Team Wins", "Blue Team Wins")) +
+  theme_minimal() +
+  labs(
+    title = "More Assists and Higher Gold Rate Lead to More Wins for Blue Team",
+    subtitle = "Assists by Blue Team vs. Gold Difference",
+    y = "Number of Assists",
+    x = "Number of Kills")+
+  theme(legend.title=element_blank())
+```
+
+```{r}
+clean_lol_data %>% ggplot(aes()) 
+```
+ 
+ 
