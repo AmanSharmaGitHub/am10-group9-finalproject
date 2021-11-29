@@ -125,9 +125,38 @@ summary(regression_clean_lol_data4)
 ```
 
 ```{r Sarah}
-clean_lol_data %>% ggplot(aes(x = blue_total_gold-red_total_gold, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
-  geom_point(alpha = 0.3) +
+clean_lol_data %>% ggplot(aes(x = blue_gold_per_min, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
+  geom_point(alpha = 0.1) +
   geom_jitter(width = 0.25) +
-  scale_colour_manual(values = c("red", "blue")) +
-  theme_minimal()
+  scale_colour_manual(values = c("red", "blue"),
+                      # breaks=c("0","1"),
+                      labels=c("Red Team Wins", "Blue Team Wins")) +
+  theme_minimal() +
+  labs(
+    title = "More Assists and Higher Gold Rate Lead to More Wins for Blue Team",
+    subtitle = "Assists by Blue Team vs. Gold Difference",
+    y = "Number of Assists",
+    x = "Gold Per Minute")+
+  theme(legend.title=element_blank())
 ```
+
+```{r}
+clean_lol_data %>% ggplot(aes(x = blue_kills, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
+  geom_point(alpha = 0.8, size = 0.9) +
+  geom_jitter() +
+  scale_colour_manual(values = c("red", "blue"),
+                      # breaks=c("0","1"),
+                      labels=c("Red Team Wins", "Blue Team Wins")) +
+  theme_minimal() +
+  labs(
+    title = "More Assists and Higher Gold Rate Lead to More Wins for Blue Team",
+    subtitle = "Assists by Blue Team vs. Gold Difference",
+    y = "Number of Assists",
+    x = "Number of Kills")+
+  theme(legend.title=element_blank())
+```
+```{r}
+
+```
+ 
+ 
