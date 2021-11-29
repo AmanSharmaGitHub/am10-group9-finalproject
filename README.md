@@ -1,14 +1,13 @@
-# Group9-FinalProject
+# Group 9-Final Project
 
-<h1> Group 9 Final Project </h1>
-
+![League of Legends](league-of-legends.jpeg)
 
 <h3> Our Topic: </h3>
 League of Legends
 
 <h3> The Dataset </h3>
-League of Legends dataset that contains approximately stats about the first 10mins of 10k ranked games. This dataset contains 
-<https://www.kaggle.com/bobbyscience/league-of-legends-diamond-ranked-games-10-min>
+League of Legends dataset that contains approximately stats about the first 10mins of 10k ranked games.
+* [Here](https://www.kaggle.com/bobbyscience/league-of-legends-diamond-ranked-games-10-min) is the dataset.
 
 <h3> Issues and questions addressed: </h3>
 
