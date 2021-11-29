@@ -62,3 +62,10 @@ clean_lol_data <- raw_lol_data %>%
 
 ```
 
+```{r}
+clean_lol_data %>% ggplot(aes(x = blue_total_gold, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
+  geom_point(alpha = 0.3) +
+  geom_jitter(width = 0.25) +
+  scale_colour_manual(values = c("red", "blue"))
+```
+
