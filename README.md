@@ -7,7 +7,7 @@ League of Legends
 
 <h3> The Dataset </h3>
 League of Legends dataset that contains approximately stats about the first 10mins of 10k ranked games.
-* [Here](https://www.kaggle.com/bobbyscience/league-of-legends-diamond-ranked-games-10-min) is the dataset.
+![Here](https://www.kaggle.com/bobbyscience/league-of-legends-diamond-ranked-games-10-min) is the dataset.
 
 <h3> Issues and questions addressed: </h3>
 
