@@ -1,5 +1,6 @@
 ---
-title: "LoL_Group9"
+title: "League of Legends Project"
+author: "Group 9 - Ziyue Chen, Rishabh Kaushik, Vera Meanti, Aman Sharma, Sarah Wu, Stephen Zhu"
 output: html_document
 ---
 
@@ -10,14 +11,20 @@ knitr::opts_chunk$set(echo = TRUE)
 (1) A statement of the question or purpose. What problems or questions did you set out to analyse?
 What were the key issues raised?
 
+With the data we have, our purpose is to explore what is the best strategy in the first 10mins of playing, to win League of Legends. 
 League of Legends is a Multiplayer Online Battle Arena (MOBA) game. For this project we have data on the first 10 minutes of 10,000 games.
 All of these games are diamond-ranked, which means the players are in the top 1.5% to 0.19% of players worldwide.
 
 (2) The background and preparation for conducting the project. How did you prepare for the project?
 What sources or background readings did you consult? What information did you use in developing
 your ideas from the conceptual stage to the finished project?
+
+As not all of us were familiar with the League of Legends game, we had to conduct some research to really understand the game and the variables in the dataset. All our group members played the game to immerse ourselves in the League of Legends world and understand what stories could be told from the data. 
+
 (3) Methodology. What did you do, and how did you do it? What statistical techniques did you use —
 for instance, scatterplots, correlation, confidence intervals, linear/logistic regression?
+
+
 (4) Results and conclusions. This is where you summarise and present your data analyses and
 communicate your main results. What did you find out? This might include tables, graphs, or verbal
 summaries. What did you learn about the problem or question you set out to investigate?
@@ -61,13 +68,16 @@ dupes <- raw_lol_data %>%
 
 #Cleaning the data
 clean_lol_data <- raw_lol_data %>% 
-  #we saw that there were duplicate columns between the blue and the red variables, so we decided to drop the red and keep the blue
+  # There are duplicate columns between the blue and the red variables, so we decided to drop the red and keep the blue
   select(-red_first_blood, -red_gold_diff) %>% 
   # We added a column that shows the average level difference between the blue and the red teams
-  mutate(avg_level_diff = blue_avg_level - red_avg_level)
+  mutate(avg_level_diff = blue_avg_level - red_avg_level) %>% 
+  # Changing two variables to be discrete instead of continuous 
+  mutate(blue_wins = as.factor(blue_wins)) %>% 
+  mutate(blue_first_blood = as.factor(blue_first_blood)) 
 
-clean_lol_data
-
+# Making sure the clean data is correct
+skimr::skim(clean_lol_data)
 
 ```
 
@@ -106,8 +116,6 @@ summary(exp_level_differential)
 # Logistic Regression
 regression_clean_lol_data4 <- glm(blue_wins ~ blue_first_blood + blue_kills + blue_experience_diff, data=clean_lol_data, family = "binomial")
 summary(regression_clean_lol_data4)
-
-
 
 ```
 
