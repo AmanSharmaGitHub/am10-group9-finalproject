@@ -106,6 +106,21 @@ summary(exp_level_differential)
 regression_clean_lol_data4 <- glm(blue_wins ~ blue_first_blood + blue_kills + blue_experience_diff, data=clean_lol_data, family = "binomial")
 summary(regression_clean_lol_data4)
 
+# Does teamwork payoff?
+regression_clean_lol_data5 <- glm(blue_wins ~ blue_kills*blue_assists, data=clean_lol_data, family = "binomial")
+summary(regression_clean_lol_data5)
+
+reg_expdiff <- glm(blue_wins ~ avg_level_diff, data = clean_lol_data, family = "binomial")
+
+plot_log <- broom::augment(reg_expdiff, type.predict = "response")
+head(plot_log)
+
+plot1 <- ggplot(plot_log, aes(x=avg_level_diff)) +
+  geom_line(aes(y= .fitted), color = "blue") +
+  labs(x="Experience Differential", y = "Blue Wins") +
+  geom_point(aes(y=blue_wins), alpha = 0.2) +
+  NULL
+plot1
 
 
 ```
