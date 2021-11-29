@@ -74,7 +74,8 @@ clean_lol_data <- raw_lol_data %>%
   mutate(avg_level_diff = blue_avg_level - red_avg_level) %>% 
   # Changing two variables to be discrete instead of continuous 
   mutate(blue_wins = as.factor(blue_wins)) %>% 
-  mutate(blue_first_blood = as.factor(blue_first_blood)) 
+  mutate(blue_first_blood = as.factor(blue_first_blood)) %>% 
+  mutate(blue_KDA = (blue_kills + blue_assists)/blue_deaths, red_KDA = (red_kills + red_assists)/red_deaths)
 
 # Making sure the clean data is correct
 skimr::skim(clean_lol_data)
@@ -150,8 +151,9 @@ clean_lol_data %>% ggplot(aes(x = blue_kills, y = blue_assists, colour = factor(
     x = "Number of Kills")+
   theme(legend.title=element_blank())
 ```
-```{r}
 
+```{r}
+clean_lol_data %>% ggplot(aes()) 
 ```
  
  
