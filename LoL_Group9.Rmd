@@ -11,9 +11,14 @@ knitr::opts_chunk$set(echo = TRUE)
 (1) A statement of the question or purpose. What problems or questions did you set out to analyse?
 What were the key issues raised?
 
-With the data we have, our purpose is to explore what is the best strategy in the first 10mins of playing, to win League of Legends. 
-League of Legends is a Multiplayer Online Battle Arena (MOBA) game. For this project we have data on the first 10 minutes of 10,000 games.
-All of these games are diamond-ranked, which means the players are in the top 1.5% to 0.19% of players worldwide.
+League of Legends is a Multiplayer Online Battle Arena (MOBA) game. For this project we have data on the first 10 minutes of 10,000 games. All of these games are diamond-ranked, which means the players are in the top 1.5% to 0.19% of players worldwide. The game lasts approximately 20 to 30 mins, there are two teams (Red vs Blue), with 5 players each. The goal of the game is to take down the enemy Nexus. 
+
+The main variables in our data are: 
+- Game_ID -> unique identifier for each game 
+- Blue_wins -> '0' if the Blue Team won the game, '1' if the Red team won. 
+- Other 19 variables per team (38 total) -> Statistics and features of the game collected after 10 minuted of playing. These include number of kills, deaths, average experience and level and more. 
+
+Our purpose is to explore what is the best strategy in the first 10mins of playing, to win League of Legends. 
 
 (2) The background and preparation for conducting the project. How did you prepare for the project?
 What sources or background readings did you consult? What information did you use in developing
@@ -24,10 +29,10 @@ As not all of us were familiar with the League of Legends game, we had to conduc
 (3) Methodology. What did you do, and how did you do it? What statistical techniques did you use —
 for instance, scatterplots, correlation, confidence intervals, linear/logistic regression?
 
-
 (4) Results and conclusions. This is where you summarise and present your data analyses and
 communicate your main results. What did you find out? This might include tables, graphs, or verbal
 summaries. What did you learn about the problem or question you set out to investigate?
+
 (5) Discussion and critique. What did you learn about the process of carrying out your project? What
 went wrong, and how could you improve it next time? For instance, did any sources of bias creep into
 your survey or experiment? What advice would you give future students? 
