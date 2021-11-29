@@ -57,13 +57,16 @@ dupes <- raw_lol_data %>%
 
 #Cleaning the data
 clean_lol_data <- raw_lol_data %>% 
-  #we saw that there were duplicate columns between the blue and the red variables, so we decided to drop the red and keep the blue
+  # There are duplicate columns between the blue and the red variables, so we decided to drop the red and keep the blue
   select(-red_first_blood, -red_gold_diff) %>% 
   # We added a column that shows the average level difference between the blue and the red teams
-  mutate(avg_level_diff = blue_avg_level - red_avg_level)
+  mutate(avg_level_diff = blue_avg_level - red_avg_level) %>% 
+  # Changing two variables to be discrete instead of continuous 
+  mutate(blue_wins = as.factor(blue_wins)) %>% 
+  mutate(blue_first_blood = as.factor(blue_first_blood)) 
 
-clean_lol_data
-
+# Making sure the clean data is correct
+skimr::skim(clean_lol_data)
 
 ```
 
