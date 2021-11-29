@@ -31,34 +31,39 @@ library(sf)
 loadfonts(device="pdf") 
 ```
 
+## Loading the Dataset 
 ```{r}
 #Loading the dataset
 raw_lol_data <- read.csv("high_diamond_ranked_10min.csv")
 
-#Initial Cleaning of Data
+#Initial cleaning of names and dropping any na's 
 raw_lol_data <- raw_lol_data %>% 
   janitor::clean_names() %>% 
   drop_na()
 ```
 
+# Cleaning the Data 
 ```{r Vera}
-#Data Exploration
 
 # Checking that variables are all stored as the right type 
 glimpse(raw_lol_data)
 
-#Skimming Data
+#Skimming Data to check that there are no missing values
 skimr::skim(raw_lol_data)
 
-#Check for duplicates
+#Checking for duplicates in the dataset
 dupes <- raw_lol_data %>% 
   janitor::get_dupes()
 
-#Cleaning
-
+#Cleaning the data
 clean_lol_data <- raw_lol_data %>% 
+  #we saw that there were duplicate columns between the blue and the red variables, so we decided to drop the red and keep the blue
   select(-red_first_blood, -red_gold_diff) %>% 
+  # We added a column that shows the average level difference between the blue and the red teams
   mutate(avg_level_diff = blue_avg_level - red_avg_level)
+
+clean_lol_data
+
 
 ```
 
