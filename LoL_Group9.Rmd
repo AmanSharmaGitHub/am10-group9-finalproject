@@ -1,5 +1,6 @@
 ---
-title: "LoL_Group9"
+title: "League of Legends Project"
+author: "Group 9 - Ziyue Chen, Rishabh Kaushik, Vera Meanti, Aman Sharma, Sarah Wu, Stephen Zhu"
 output: html_document
 ---
 
@@ -70,3 +71,13 @@ skimr::skim(clean_lol_data)
 
 ```
 
+```{r Aman}
+# Correlations
+
+Corr_clean_lol_data <- clean_lol_data %>%
+  select(blue_wins, blue_first_blood, blue_kills, blue_deaths, avg_level_diff, blue_experience_diff)
+Corr <- Corr_clean_lol_data %>% 
+  GGally::ggpairs()
+Corr
+
+```
