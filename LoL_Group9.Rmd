@@ -8,101 +8,37 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE)
 ```
 
-<<<<<<< HEAD
-(1) A statement of the question or purpose. What problems or questions
-    did you set out to analyse? What were the key issues raised?
+## League of Legends:
 
-League of Legends is a Multiplayer Online Battle Arena (MOBA) game. For
-this project we have data on the first 10 minutes of 10,000 games. All
-of these games are diamond-ranked, which means the players are in the
-top 1.5% to 0.19% of players worldwide. The game lasts approximately 20
-to 30 mins, there are two teams (Red vs Blue), with 5 players each. The
-goal of the game is to take down the enemy Nexus.
+League of Legends is a Multiplayer Online Battle Arena (MOBA) game. Our
+dataset holds data on the first 10 minutes of 10,000 games. All of these
+games are diamond-ranked, which means the players are in the top 1.5% to
+0.19% of players worldwide. The game lasts approximately 30 to 40 mins,
+there are two teams (Red vs Blue), with 5 players each. The goal of the
+game is to take down the enemy base (Nexus). Around the 10 minutes mark,
+if each of the 5 players of the team agree, they can either continue
+playing or surrender.
 
-The main variables in our data are: - Game_ID -\> unique identifier for
-each game - Blue_wins -\> '0' if the Blue Team won the game, '1' if the
-Red team won. - Other 19 variables per team (38 total) -\> Statistics
-and features of the game collected after 10 minuted of playing. These
-include number of kills, deaths, average experience and level and more.
+## Our purpose:
 
-Our purpose is to explore what is the best strategy in the first 10mins
-of playing, to win League of Legends.
+Our purpose in this project, is to explore what is the best strategy in
+the first 10mins of playing, to optimise your chances of winning League
+of Legends, and when you should decide to surrender or continue the
+game.
 
-(2) The background and preparation for conducting the project. How did
-    you prepare for the project? What sources or background readings did
-    you consult? What information did you use in developing your ideas
-    from the conceptual stage to the finished project?
+## How did we prepare?
 
 As not all of us were familiar with the League of Legends game, we had
 to conduct some research to really understand the game and the variables
 in the dataset. All our group members played the game to immerse
 ourselves in the League of Legends world and understand what stories
 could be told from the data.
-
-(3) Methodology. What did you do, and how did you do it? What
-    statistical techniques did you use --- for instance, scatterplots,
-    correlation, confidence intervals, linear/logistic regression?
-
-After loading, inspecting and cleaning the dataset we conducted some
-basic exploratory data analysis (EDA) by plotting pairwise correlations,
-linear and logistic regression models to investigate the underlying
-relationships between independent variables and with the dependent
-variable (which team wins).
-
-(4) Results and conclusions. This is where you summarise and present
-    your data analyses and communicate your main results. What did you
-    find out? This might include tables, graphs, or verbal summaries.
-    What did you learn about the problem or question you set out to
-    investigate?
-
-What we learnt is that statistically it is very clear to predict which
-team has the advantage, and therefore their chance of winning, after
-only 10 minutes of a game that can last 30-40 minutes.
-
-In the interests of a players efficiency, choosing to surrender after 10
-minutes may be a wise move despite the fact it locks in a loss, but
-saves the players the additional time of playing a game that they are
-highly likely to lose.
-
-(5) Discussion and critique. What did you learn about the process of
-    carrying out your project? What went wrong, and how could you
-    improve it next time? For instance, did any sources of bias creep
-    into your survey or experiment? What advice would you give future
-    students?
-
-League of Legends is a popular game. According to LeagueFeed, it had
-over 100 million players in 2020. However, many of our team were not
-very familiar with the game and this made the process of storytelling
-and turning data into valuable insight quite challenging, especially if
-our audience is those who are highly knowledgable and skilled at the
-game. One benefit of this situation though is that most of us would be
-quite unbiased when it comes to recommending a game strategy because we
-do not have personal anecdotal experience that may influence which
-conclusions we wish to draw. Moreover, we obtained this dataset from
-Kaggle and some cleaning had already been done. While this was helpful
-for us, it also meant we have less transparency and understanding of the
-original dataset and must have faith in the integrity of whoever
-uploaded it.
-=======
-## League of Legends: 
-
-League of Legends is a Multiplayer Online Battle Arena (MOBA) game. Our dataset holds data on the first 10 minutes of 10,000 games. All of these games are diamond-ranked, which means the players are in the top 1.5% to 0.19% of players worldwide. The game lasts approximately 20 to 40 mins, there are two teams (Red vs Blue), with 5 players each. The goal of the game is to take down the enemy Nexus.
-
-## Our purpose: 
-
-Our purpose is to explore what is the best strategy in the first 10mins of playing, to win League of Legends.
-
-## How did we prepare? 
-
-As not all of us were familiar with the League of Legends game, we had to conduct some research to really understand the game and the variables in the dataset. All our group members played the game to immerse ourselves in the League of Legends world and understand what stories could be told from the data.
-
-## Discussion and Critique (to  be put at the end of the doc once finished - if not every time we commit it gives errors)
-
-League of Legends is a popular game. According to LeagueFeed, it had over 100 million players in 2020. However, many of our team were not very familiar with the game and this made the process of storytelling and turning data into valuable insight quite challenging, especially if our audience is those who are highly knowledgable and skilled at the game. One benefit of this situation though is that most of us would be quite unbiased when it comes to recommending a game strategy because we do not have personal anecdotal experience that may influence which conclusions we wish to draw. Moreover, we obtained this dataset from Kaggle and some cleaning had already been done. While this was helpful for us, it also meant we have less transparency and understanding of the original dataset and must have faith in the integrity of whoever uploaded it.
->>>>>>> f6366730c19f2385decef27f158c664627e792bc
 
 ```{r libraries, include=FALSE}
 library(tidyverse)
@@ -118,23 +54,26 @@ library(corrplot)
 loadfonts(device="pdf") 
 ```
 
-<<<<<<< HEAD
-## Loading the Dataset
-=======
 ## Loading and Cleaning the Data
 
 The main variables in our data are:
 
 -   Game_ID: unique identifier for each game
 
--   Blue_wins: '1' if the Blue Team won the game, '0' if the Red team won.
+-   Blue_wins: '1' if the Blue Team won the game, '0' if the Red team
+    won.
 
--   Other 19 variables per team (38 total): Statistics and features of the game collected after 10 minutes of playing. These include number of kills, deaths, average experience and more.
+-   Other 19 variables per team (38 total): Statistics and features of
+    the game collected after 10 minutes of playing. These include number
+    of kills, deaths, average experience and more.
 
-After loading, inspecting and cleaning the dataset we conducted some basic exploratory data analysis (EDA) by plotting pairwise correlations, linear and logistic regression models to investigate the underlying relationships between independent variables and with the dependent variable (which team wins).
->>>>>>> f6366730c19f2385decef27f158c664627e792bc
+After loading, inspecting and cleaning the dataset we conducted some
+basic exploratory data analysis (EDA) by plotting pairwise correlations,
+linear and logistic regression models to investigate the underlying
+relationships between independent variables and with the dependent
+variable (which team wins).
 
-```{r}
+```{r laoding}
 #Loading the dataset
 raw_lol_data <- read.csv("high_diamond_ranked_10min.csv")
 
@@ -144,12 +83,7 @@ raw_lol_data <- raw_lol_data %>%
   drop_na()
 ```
 
-<<<<<<< HEAD
-# Cleaning the Data
-
-=======
->>>>>>> f6366730c19f2385decef27f158c664627e792bc
-```{r Vera}
+```{r cleaning}
 
 # Checking that variables are all stored as the right type 
 glimpse(raw_lol_data)
@@ -165,7 +99,7 @@ dupes <- raw_lol_data %>%
 clean_lol_data <- raw_lol_data %>% 
   # There are duplicate columns between the blue and the red variables, so we decided to drop the red and keep the blue
   select(-red_first_blood, -red_gold_diff, -red_experience_diff) %>% 
-  # We added a column that shows the average level difference between the blue and the red teams
+  # We added columns that shows the average level difference between the blue and the red teams
   mutate(avg_level_diff = blue_avg_level - red_avg_level,
          wards_diff = blue_wards_placed + blue_wards_destroyed - red_wards_placed - red_wards_destroyed,
          kill_diff = blue_kills - red_kills,
@@ -176,7 +110,7 @@ clean_lol_data <- raw_lol_data %>%
          minion_diff = blue_total_minions_killed - red_total_minions_killed,
          jg_diff = blue_total_jungle_minions_killed - red_total_jungle_minions_killed) %>% 
   
-  # Changing two variables to be discrete instead of continuous 
+  # Changing variables to be discrete instead of continuous 
   mutate(blue_wins = as.factor(blue_wins)) %>% 
   mutate(blue_first_blood = as.factor(blue_first_blood)) %>% 
   mutate(blue_KDA = if_else(blue_deaths > 0, (blue_kills + blue_assists)/blue_deaths, (blue_kills + blue_assists)/1L),
@@ -187,8 +121,8 @@ skimr::skim(clean_lol_data)
 
 ```
 
-```{r Aman}
-# Correlations
+```{r correlations}
+# Plotting Correlations
 
 Corr_clean_lol_data <- clean_lol_data %>%
   select(blue_wins, blue_first_blood, blue_kills, blue_deaths, avg_level_diff, blue_experience_diff)
@@ -198,7 +132,9 @@ Corr
 
 ```
 
-```{r linear_regression_Stephen}
+### Linear and Logistic Regression Models
+
+```{r linear_regression}
 # distribution of gold & exp difference by outcome
 clean_lol_data %>% 
   ggplot(aes(x = blue_gold_diff, y = blue_experience_diff, color = blue_wins)) +
@@ -281,16 +217,18 @@ plot1 <- ggplot(plot_log, aes(x=avg_level_diff)) +
 plot1
 ```
 
-<<<<<<< HEAD
-=======
-## Results and Visualizations 
+## Results and Visualizations
 
-What we learnt is that statistically it is very clear to predict which team has the advantage, and therefore their chance of winning, after only 10 minutes of a game that can last 30-40 minutes.
+What we learnt is that statistically it is very clear to predict which
+team has the advantage, and therefore their chance of winning, after
+only 10 minutes of a game that can last 30-40 minutes.
 
-In the interests of a players efficiency, choosing to surrender after 10 minutes may be a wise move despite the fact it locks in a loss, but saves the players the additional time of playing a game that they are highly likely to lose.
+In the interests of a players efficiency, choosing to surrender after 10
+minutes may be a wise move despite the fact it locks in a loss, but
+saves the players the additional time of playing a game that they are
+highly likely to lose.
 
->>>>>>> f6366730c19f2385decef27f158c664627e792bc
-```{r Sarah}
+```{r}
 clean_lol_data %>% ggplot(aes(x = blue_gold_per_min, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
   geom_point(alpha = 0.1) +
   geom_jitter(width = 0.25) +
@@ -385,7 +323,6 @@ ggplot(aes(x = feature, y = value)) +
   theme(legend.title=element_blank())
 ```
 
-
 ```{r}
 clean_lol_data %>% 
   pivot_longer(cols = c("elite_diff","dragon_diff", "heralds_diff", "towers_diff"), names_to = "feature", values_to = "value") %>% 
@@ -401,8 +338,6 @@ clean_lol_data %>%
   theme(legend.title=element_blank())
   
 ```
-<<<<<<< HEAD
-=======
 
 ```{r tower_win_rate}
 clean_lol_data %>% 
@@ -416,21 +351,6 @@ clean_lol_data %>%
   NULL
 ```
 
-```{r Sarah}
-clean_lol_data %>% ggplot(aes(x = kill_diff, y = blue_gold_diff, colour = factor(blue_wins), fill = factor(blue_wins))) +
-  geom_point(alpha = 0.1) +
-  geom_jitter(width = 0.25) +
-  scale_colour_manual(values = c("red", "blue"),
-                      # breaks=c("0","1"),
-                      labels=c("Red Team Wins", "Blue Team Wins")) +
-  theme_minimal() +
-#  labs(
-#    title = "More Assists and Higher Gold Rate Lead to More Wins for Blue Team",
-#    subtitle = "Assists by Blue Team vs. Gold Difference",
-#    y = "Number of Assists",
-#    x = "Gold Per Minute")+
-  theme(legend.title=element_blank())
-```
 ```{r}
 clean_lol_data %>% ggplot(aes(x = kill_diff, y = blue_gold_diff, colour = factor(blue_wins), fill = factor(blue_wins))) +
   geom_point(alpha = 0.1) +
@@ -447,7 +367,23 @@ clean_lol_data %>% ggplot(aes(x = kill_diff, y = blue_gold_diff, colour = factor
   theme(legend.title=element_blank())
 ```
 
-```{r correlation}
+```{r}
+clean_lol_data %>% ggplot(aes(x = kill_diff, y = blue_gold_diff, colour = factor(blue_wins), fill = factor(blue_wins))) +
+  geom_point(alpha = 0.1) +
+  geom_jitter(width = 0.25) +
+  scale_colour_manual(values = c("red", "blue"),
+                      # breaks=c("0","1"),
+                      labels=c("Red Team Wins", "Blue Team Wins")) +
+  theme_minimal() +
+#  labs(
+#    title = "More Assists and Higher Gold Rate Lead to More Wins for Blue Team",
+#    subtitle = "Assists by Blue Team vs. Gold Difference",
+#    y = "Number of Assists",
+#    x = "Gold Per Minute")+
+  theme(legend.title=element_blank())
+```
+
+```{r correlation_viz}
 lol_cor <- clean_lol_data %>% 
   select(blue_gold_diff, blue_experience_diff, kill_diff, avg_level_diff, wards_diff, elite_diff, towers_diff, minion_diff, jg_diff) %>% 
   rename(`Gold Diff` = blue_gold_diff,
@@ -463,8 +399,17 @@ lol_cor <- clean_lol_data %>%
 corrplot(cor(lol_cor))
 ```
 
+## Discussion and Critique 
 
-
- 
-
->>>>>>> f6366730c19f2385decef27f158c664627e792bc
+League of Legends is a popular game. According to LeagueFeed, it had
+over 100 million players in 2020. However, many of our team were not
+very familiar with the game and this made the process of storytelling
+and turning data into valuable insight quite challenging, especially if
+our audience is highly knowledgable and skilled at the game. One benefit
+of this situation though is that most of us were quite unbiased when it
+comes to recommending a game strategy because we do not have personal
+anecdotal experience that may influence which conclusions we wish to
+draw. Moreover, we obtained this dataset from Kaggle and some cleaning
+had already been done. While this was helpful for us, it also meant we
+have less transparency and understanding of the original dataset and
+must have faith in the integrity of whoever uploaded it.
