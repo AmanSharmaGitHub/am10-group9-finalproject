@@ -196,7 +196,7 @@ clean_lol_data %>% ggplot(aes(x = blue_kills, y = blue_assists, colour = factor(
 ```
 
 ```{r}
-clean_lol_data %>% group_by(blue_wins) %>% 
+activity <- clean_lol_data %>% group_by(blue_wins) %>% 
   summarise(
             # avg_wards_placed = mean(blue_wards_placed), 
             # avg_wards_destroyed = mean(blue_wards_destroyed), 
@@ -210,7 +210,8 @@ clean_lol_data %>% group_by(blue_wins) %>%
             # avg_minions,
             avg_elite_monsters, avg_dragons, avg_heralds, avg_towers_destroyed), 
                names_to = "feature", 
-               values_to = "value") %>% 
+               values_to = "value") 
+activity%>% 
   ggplot(.,aes(x = feature, y = value)) + 
   geom_col(aes(fill = blue_wins), position = "dodge") +
   scale_fill_manual(values = c("red","blue"), labels=c("Red Team Wins", "Blue Team Wins"))+
@@ -223,5 +224,9 @@ clean_lol_data %>% group_by(blue_wins) %>%
   theme(legend.title=element_blank())
 ```
 
- 
+```{r}
+activity %>% ggplot(.,aes(y = value)) +
+  geom_violin(aes(fill = blue_wins))
+```
+
  
