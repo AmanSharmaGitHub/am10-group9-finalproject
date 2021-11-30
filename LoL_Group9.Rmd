@@ -108,6 +108,7 @@ Corr <- Corr_clean_lol_data %>%
 Corr
 
 ```
+
 ```{r linear_regression}
 # Linear regression to predict gold_diff and exp_diff
 model_linear_gold <- lm(blue_gold_diff ~ blue_first_blood + avg_level_diff + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
@@ -213,14 +214,21 @@ clean_lol_data %>% group_by(blue_wins) %>%
                values_to = "value") %>% 
   ggplot(.,aes(x = feature, y = value)) + 
   geom_col(aes(fill = blue_wins), position = "dodge") +
-  scale_fill_manual(values = c("red","blue"), labels=c("Red Team Wins", "Blue Team Wins"))+
+  scale_fill_manual(values = c("#e63946","#0466c8"), labels=c("Red Team Wins", "Blue Team Wins"))+
   theme_minimal() +
+  coord_flip() + 
   labs(
     title = "Towers Destroyed is the Most Significant Determinant",
     subtitle = "Number of Kills and Detroys for All Objects in Game",
     y = "Average Number of Kills/Destroys",
     x = "")+
-  theme(legend.title=element_blank())
+   theme(
+    text=element_text(size=12, family="Lato"),
+    plot.title =element_text(face='bold'),
+    plot.subtitle = element_text(face='italic', size=10),
+    axis.text = element_text(angle = 0, hjust = 0.5, size = 10),
+    legend.title=element_blank()
+  ) 
 ```
 
  
