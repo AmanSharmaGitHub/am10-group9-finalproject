@@ -33,6 +33,7 @@ library(sf)
 library(GGally)
 library(rsample)
 library(caret)
+library(corrplot)
 
 loadfonts(device="pdf") 
 ```
@@ -83,7 +84,7 @@ clean_lol_data <- raw_lol_data %>%
          dragon_diff = blue_dragons - red_dragons,
          heralds_diff = blue_heralds - red_heralds,
          towers_diff = blue_towers_destroyed - red_towers_destroyed,
-         cs_diff = blue_total_minions_killed - red_total_minions_killed,
+         minion_diff = blue_total_minions_killed - red_total_minions_killed,
          jg_diff = blue_total_jungle_minions_killed - red_total_jungle_minions_killed) %>% 
   
   # Changing two variables to be discrete instead of continuous 
@@ -168,8 +169,11 @@ regression_clean_lol_data4 <- glm(blue_wins ~ blue_first_blood + blue_kills + bl
 summary(regression_clean_lol_data4)
 
 # LR huge model
-regression_lol5 <- glm(blue_wins ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data, family = "binomial")
+regression_lol5 <- glm(blue_wins ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data, family = "binomial")
 summary(regression_lol5)
+
+regression_lol6 <- glm(blue_wins ~ kill_diff + elite_diff + dragon_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data, family = "binomial")
+summary(regression_lol6)
 
 # Does teamwork payoff?
 regression_clean_lol_data5 <- glm(blue_wins ~ blue_kills*blue_assists, data=clean_lol_data, family = "binomial")
@@ -222,7 +226,7 @@ clean_lol_data %>% ggplot(aes(x = blue_kills, y = blue_assists, colour = factor(
     title = "More Assists and Higher Gold Rate Lead to More Wins for Blue Team",
     subtitle = "Assists by Blue Team vs. Gold Difference",
     y = "Number of Assists",
-    x = "Number of Kills")+
+    x = "Number of Kills") +
   theme(legend.title=element_blank())
 ```
 
@@ -242,7 +246,7 @@ clean_lol_data %>% group_by(blue_wins) %>%
             avg_elite_monsters, avg_dragons, avg_heralds, avg_towers_destroyed), 
                names_to = "feature", 
                values_to = "value") %>% 
-  ggplot(.,aes(x = feature, y = value)) + 
+  ggplot(aes(x = feature, y = value)) + 
   geom_col(aes(fill = blue_wins), position = "dodge") +
   scale_fill_manual(values = c("#e63946","#0466c8"), labels=c("Red Team Wins", "Blue Team Wins"))+
   theme_minimal() +
@@ -262,7 +266,22 @@ clean_lol_data %>% group_by(blue_wins) %>%
 ```
 
 ```{r}
-  ggplot(clean_lol_data,aes(x = feature, y = value)) + 
+clean_lol_data %>% group_by(blue_wins) %>% 
+  summarise(
+            # avg_wards_placed = mean(blue_wards_placed), 
+            # avg_wards_destroyed = mean(blue_wards_destroyed), 
+            # avg_minions = mean(blue_total_minions_killed),
+            avg_elite_monsters = mean(blue_elite_monsters), 
+            avg_dragons = mean(blue_dragons), 
+            avg_heralds = mean(blue_heralds), 
+            avg_towers_destroyed = mean(blue_towers_destroyed)) %>% 
+  pivot_longer(cols = c(
+            # avg_wards_placed, avg_wards_destroyed, 
+            # avg_minions,
+            avg_elite_monsters, avg_dragons, avg_heralds, avg_towers_destroyed), 
+               names_to = "feature", 
+               values_to = "value") %>%  
+ggplot(aes(x = feature, y = value)) + 
   geom_col(aes(fill = blue_wins), position = "dodge") +
   scale_fill_manual(values = c("red","blue"), labels=c("Red Team Wins", "Blue Team Wins"))+
   theme_minimal() +
@@ -302,6 +321,55 @@ clean_lol_data %>%
   geom_col() +
   NULL
 ```
+
+```{r Sarah}
+clean_lol_data %>% ggplot(aes(x = kill_diff, y = blue_gold_diff, colour = factor(blue_wins), fill = factor(blue_wins))) +
+  geom_point(alpha = 0.1) +
+  geom_jitter(width = 0.25) +
+  scale_colour_manual(values = c("red", "blue"),
+                      # breaks=c("0","1"),
+                      labels=c("Red Team Wins", "Blue Team Wins")) +
+  theme_minimal() +
+#  labs(
+#    title = "More Assists and Higher Gold Rate Lead to More Wins for Blue Team",
+#    subtitle = "Assists by Blue Team vs. Gold Difference",
+#    y = "Number of Assists",
+#    x = "Gold Per Minute")+
+  theme(legend.title=element_blank())
+```
+```{r}
+clean_lol_data %>% ggplot(aes(x = kill_diff, y = blue_gold_diff, colour = factor(blue_wins), fill = factor(blue_wins))) +
+  geom_point(alpha = 0.1) +
+  geom_jitter(width = 0.25) +
+  scale_colour_manual(values = c("red", "blue"),
+                      # breaks=c("0","1"),
+                      labels=c("Red Team Wins", "Blue Team Wins")) +
+  theme_minimal() +
+#  labs(
+#    title = "More Assists and Higher Gold Rate Lead to More Wins for Blue Team",
+#    subtitle = "Assists by Blue Team vs. Gold Difference",
+#    y = "Number of Assists",
+#    x = "Gold Per Minute")+
+  theme(legend.title=element_blank())
+```
+
+```{r correlation}
+lol_cor <- clean_lol_data %>% 
+  select(blue_gold_diff, blue_experience_diff, kill_diff, avg_level_diff, wards_diff, elite_diff, towers_diff, minion_diff, jg_diff) %>% 
+  rename(`Gold Diff` = blue_gold_diff,
+         `Experience Diff` = blue_experience_diff,
+         `Kill Diff` = kill_diff,
+         `Level Diff` = avg_level_diff,
+         `Elite Monster Diff` = elite_diff,
+         `Towers Diff` = towers_diff,
+         `Minion Diff` = minion_diff,
+         `Jungle Diff` = jg_diff,
+         `Ward Diff` = wards_diff)
+
+corrplot(cor(lol_cor))
+```
+
+
 
  
 
