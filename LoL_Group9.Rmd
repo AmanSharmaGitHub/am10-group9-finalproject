@@ -165,16 +165,19 @@ regression_clean_lol_data3 <- glm(blue_wins ~ blue_first_blood + blue_kills + av
 summary(regression_clean_lol_data3)
 
 # Investigating collinearity
-exp_level_differential <- lm(avg_level_diff ~ blue_experience_diff, data =clean_lol_data)
+exp_level_differential <- glm(avg_level_diff ~ blue_experience_diff, data =clean_lol_data)
 summary(exp_level_differential)
 
 # Logistic Regression
 regression_clean_lol_data4 <- glm(blue_wins ~ blue_first_blood + blue_kills + blue_experience_diff, data=clean_lol_data, family = "binomial")
 summary(regression_clean_lol_data4)
 
+<<<<<<< HEAD
 # LR huge model
 regression_lol5 <- glm(blue_wins ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data, family = "binomial")
 summary(regression_lol5)
+=======
+>>>>>>> c61eb0b8a0d3883e90b00aab9abc63d3c0889022
 
 # Does teamwork payoff?
 regression_clean_lol_data5 <- glm(blue_wins ~ blue_kills*blue_assists, data=clean_lol_data, family = "binomial")
@@ -191,7 +194,13 @@ plot1 <- ggplot(plot_log, aes(x=avg_level_diff)) +
   geom_point(aes(y=as.numeric(blue_wins)), alpha = 0.2) +
   NULL
 plot1
+<<<<<<< HEAD
 ```
+=======
+
+```
+
+>>>>>>> c61eb0b8a0d3883e90b00aab9abc63d3c0889022
 
 ```{r Sarah}
 clean_lol_data %>% ggplot(aes(x = blue_gold_per_min, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
@@ -226,7 +235,32 @@ clean_lol_data %>% ggplot(aes(x = blue_kills, y = blue_assists, colour = factor(
 ```
 
 ```{r}
-clean_lol_data %>% ggplot(aes()) 
+clean_lol_data %>% group_by(blue_wins) %>% 
+  summarise(
+            # avg_wards_placed = mean(blue_wards_placed), 
+            # avg_wards_destroyed = mean(blue_wards_destroyed), 
+            # avg_minions = mean(blue_total_minions_killed),
+            avg_elite_monsters = mean(blue_elite_monsters), 
+            avg_dragons = mean(blue_dragons), 
+            avg_heralds = mean(blue_heralds), 
+            avg_towers_destroyed = mean(blue_towers_destroyed)) %>% 
+  pivot_longer(cols = c(
+            # avg_wards_placed, avg_wards_destroyed, 
+            # avg_minions,
+            avg_elite_monsters, avg_dragons, avg_heralds, avg_towers_destroyed), 
+               names_to = "feature", 
+               values_to = "value") %>% 
+  ggplot(.,aes(x = feature, y = value)) + 
+  geom_col(aes(fill = blue_wins), position = "dodge") +
+  scale_fill_manual(values = c("red","blue"), labels=c("Red Team Wins", "Blue Team Wins"))+
+  theme_minimal() +
+  labs(
+    title = "Towers Destroyed is the Most Significant Determinant",
+    subtitle = "Number of Kills and Detroys for All Objects in Game",
+    y = "Average Number of Kills/Destroys",
+    x = "")+
+  theme(legend.title=element_blank())
 ```
+
  
  
