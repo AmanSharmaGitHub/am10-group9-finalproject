@@ -42,7 +42,8 @@ library(tidyverse)
 library(extrafont)
 library(vroom)
 library(skimr)
-library(sf) 
+library(sf)
+library(GGally)
 
 loadfonts(device="pdf") 
 ```
@@ -74,14 +75,23 @@ dupes <- raw_lol_data %>%
 #Cleaning the data
 clean_lol_data <- raw_lol_data %>% 
   # There are duplicate columns between the blue and the red variables, so we decided to drop the red and keep the blue
-  select(-red_first_blood, -red_gold_diff) %>% 
+  select(-red_first_blood, -red_gold_diff, -red_experience_diff) %>% 
   # We added a column that shows the average level difference between the blue and the red teams
-  mutate(avg_level_diff = blue_avg_level - red_avg_level) %>% 
+  mutate(avg_level_diff = blue_avg_level - red_avg_level,
+         wards_diff = blue_wards_placed + blue_wards_destroyed - red_wards_placed - red_wards_destroyed,
+         kill_diff = blue_kills - red_kills,
+         elite_diff = blue_elite_monsters - red_elite_monsters,
+         dragon_diff = blue_dragons - red_dragons,
+         heralds_diff = blue_heralds - red_heralds,
+         towers_diff = blue_towers_destroyed - red_towers_destroyed,
+         cs_diff = blue_total_minions_killed - red_total_minions_killed,
+         jg_diff = blue_total_jungle_minions_killed - red_total_jungle_minions_killed) %>% 
+  
   # Changing two variables to be discrete instead of continuous 
   mutate(blue_wins = as.factor(blue_wins)) %>% 
   mutate(blue_first_blood = as.factor(blue_first_blood)) %>% 
-  mutate(blue_KDA = (blue_kills + blue_assists)/blue_deaths, red_KDA = (red_kills + red_assists)/red_deaths) %>% 
-  group_by(blue_wins)
+  mutate(blue_KDA = if_else(blue_deaths > 0, (blue_kills + blue_assists)/blue_deaths, (blue_kills + blue_assists)/1L),
+         red_KDA = if_else(red_deaths > 0, (red_kills + red_assists)/red_deaths, (red_kills + red_assists)/1L))
 
 # Making sure the clean data is correct
 skimr::skim(clean_lol_data)
@@ -98,6 +108,15 @@ Corr <- Corr_clean_lol_data %>%
 Corr
 
 ```
+```{r linear_regression}
+# Linear regression to predict gold_diff and exp_diff
+model_linear_gold <- lm(blue_gold_diff ~ blue_first_blood + avg_level_diff + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
+summary(model_linear_gold)
+
+model_linear_exp <- lm(blue_experience_diff ~ blue_first_blood + avg_level_diff + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
+summary(model_linear_exp)
+```
+
 
 
 ```{r Regression}
@@ -124,7 +143,25 @@ summary(exp_level_differential)
 regression_clean_lol_data4 <- glm(blue_wins ~ blue_first_blood + blue_kills + blue_experience_diff, data=clean_lol_data, family = "binomial")
 summary(regression_clean_lol_data4)
 
+
+# Does teamwork payoff?
+regression_clean_lol_data5 <- glm(blue_wins ~ blue_kills*blue_assists, data=clean_lol_data, family = "binomial")
+summary(regression_clean_lol_data5)
+
+reg_expdiff <- glm(blue_wins ~ avg_level_diff, data = clean_lol_data, family = "binomial")
+
+plot_log <- broom::augment(reg_expdiff, type.predict = "response")
+head(plot_log)
+
+plot1 <- ggplot(plot_log, aes(x=avg_level_diff)) +
+  geom_line(aes(y= .fitted), color = "blue") +
+  labs(x="Experience Differential", y = "Blue Wins") +
+  geom_point(aes(y=blue_wins), alpha = 0.2) +
+  NULL
+plot1
+
 ```
+
 
 ```{r Sarah}
 clean_lol_data %>% ggplot(aes(x = blue_gold_per_min, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
@@ -185,9 +222,6 @@ clean_lol_data %>% group_by(blue_wins) %>%
     x = "")+
   theme(legend.title=element_blank())
 ```
- 
-```{r}
 
-```
  
  
