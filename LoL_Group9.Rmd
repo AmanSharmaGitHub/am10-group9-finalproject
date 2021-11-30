@@ -20,6 +20,10 @@ Our purpose is to explore what is the best strategy in the first 10mins of playi
 
 As not all of us were familiar with the League of Legends game, we had to conduct some research to really understand the game and the variables in the dataset. All our group members played the game to immerse ourselves in the League of Legends world and understand what stories could be told from the data.
 
+## Discussion and Critique (to  be put at the end of the doc once finished - if not every time we commit it gives errors)
+
+League of Legends is a popular game. According to LeagueFeed, it had over 100 million players in 2020. However, many of our team were not very familiar with the game and this made the process of storytelling and turning data into valuable insight quite challenging, especially if our audience is those who are highly knowledgable and skilled at the game. One benefit of this situation though is that most of us would be quite unbiased when it comes to recommending a game strategy because we do not have personal anecdotal experience that may influence which conclusions we wish to draw. Moreover, we obtained this dataset from Kaggle and some cleaning had already been done. While this was helpful for us, it also meant we have less transparency and understanding of the original dataset and must have faith in the integrity of whoever uploaded it.
+
 ```{r libraries, include=FALSE}
 library(tidyverse)
 library(extrafont)
@@ -270,6 +274,21 @@ clean_lol_data %>% group_by(blue_wins) %>%
   theme(legend.title=element_blank())
 ```
 
-## Discussion and Critique 
 
-League of Legends is a popular game. According to LeagueFeed, it had over 100 million players in 2020. However, many of our team were not very familiar with the game and this made the process of storytelling and turning data into valuable insight quite challenging, especially if our audience is those who are highly knowledgable and skilled at the game. One benefit of this situation though is that most of us would be quite unbiased when it comes to recommending a game strategy because we do not have personal anecdotal experience that may influence which conclusions we wish to draw. Moreover, we obtained this dataset from Kaggle and some cleaning had already been done. While this was helpful for us, it also meant we have less transparency and understanding of the original dataset and must have faith in the integrity of whoever uploaded it.
+```{r}
+clean_lol_data %>% 
+  pivot_longer(cols = c("elite_diff","dragon_diff", "heralds_diff", "towers_diff"), names_to = "feature", values_to = "value") %>% 
+  ggplot(.,aes(x = feature, y = value)) +
+  geom_violin(aes(fill = feature)) +
+  scale_fill_brewer(palette = 1)
+  theme_minimal() +
+  labs(
+    title = "",
+    subtitle = "Distribution of Activity Differences",
+    y = "",
+    x = "")+
+  theme(legend.title=element_blank())
+  
+```
+ 
+
