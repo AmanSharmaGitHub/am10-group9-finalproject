@@ -172,12 +172,9 @@ summary(exp_level_differential)
 regression_clean_lol_data4 <- glm(blue_wins ~ blue_first_blood + blue_kills + blue_experience_diff, data=clean_lol_data, family = "binomial")
 summary(regression_clean_lol_data4)
 
-<<<<<<< HEAD
 # LR huge model
 regression_lol5 <- glm(blue_wins ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data, family = "binomial")
 summary(regression_lol5)
-=======
->>>>>>> c61eb0b8a0d3883e90b00aab9abc63d3c0889022
 
 # Does teamwork payoff?
 regression_clean_lol_data5 <- glm(blue_wins ~ blue_kills*blue_assists, data=clean_lol_data, family = "binomial")
@@ -194,13 +191,7 @@ plot1 <- ggplot(plot_log, aes(x=avg_level_diff)) +
   geom_point(aes(y=as.numeric(blue_wins)), alpha = 0.2) +
   NULL
 plot1
-<<<<<<< HEAD
 ```
-=======
-
-```
-
->>>>>>> c61eb0b8a0d3883e90b00aab9abc63d3c0889022
 
 ```{r Sarah}
 clean_lol_data %>% ggplot(aes(x = blue_gold_per_min, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
