@@ -111,9 +111,6 @@ Corr
 
 ```
 
-<<<<<<< HEAD
-```{r linear_regression}
-=======
 ```{r linear_regression_Stephen}
 # distribution of gold & exp difference by outcome
 clean_lol_data %>% 
@@ -122,7 +119,6 @@ clean_lol_data %>%
   theme_classic() +
   NULL
 
->>>>>>> 6de09a3216d7d1ad4b9660baa8003e3f183dda9d
 # Linear regression to predict gold_diff and exp_diff
 model_linear_gold <- lm(blue_gold_diff ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
 summary(model_linear_gold)
@@ -264,6 +260,8 @@ clean_lol_data %>% group_by(blue_wins) %>%
     legend.title=element_blank()
   ) 
 ```
+
+
 
  
  
