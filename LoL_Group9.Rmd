@@ -54,6 +54,8 @@ library(vroom)
 library(skimr)
 library(sf)
 library(GGally)
+library(rsample)
+library(caret)
 
 loadfonts(device="pdf") 
 ```
@@ -118,13 +120,44 @@ Corr <- Corr_clean_lol_data %>%
 Corr
 
 ```
+
+<<<<<<< HEAD
 ```{r linear_regression}
+=======
+```{r linear_regression_Stephen}
+# distribution of gold & exp difference by outcome
+clean_lol_data %>% 
+  ggplot(aes(x = blue_gold_diff, y = blue_experience_diff, color = blue_wins)) +
+  geom_point() +
+  theme_classic() +
+  NULL
+
+>>>>>>> 6de09a3216d7d1ad4b9660baa8003e3f183dda9d
 # Linear regression to predict gold_diff and exp_diff
-model_linear_gold <- lm(blue_gold_diff ~ blue_first_blood + avg_level_diff + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
+model_linear_gold <- lm(blue_gold_diff ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
 summary(model_linear_gold)
 
-model_linear_exp <- lm(blue_experience_diff ~ blue_first_blood + avg_level_diff + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
+model_linear_exp <- lm(blue_experience_diff ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
 summary(model_linear_exp)
+
+plot(model_linear_gold)
+plot(model_linear_exp)
+
+# k-fold cross validation
+control <- trainControl (
+    method="cv",
+    number=5,
+    verboseIter=TRUE)
+
+model_linear_gold_cv<-train(
+    blue_gold_diff ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA,
+    clean_lol_data,
+   method = "lm",
+    trControl = control
+   )
+
+summary(model_linear_gold_cv)
+
 ```
 
 
@@ -153,6 +186,9 @@ summary(exp_level_differential)
 regression_clean_lol_data4 <- glm(blue_wins ~ blue_first_blood + blue_kills + blue_experience_diff, data=clean_lol_data, family = "binomial")
 summary(regression_clean_lol_data4)
 
+# LR huge model
+regression_lol5 <- glm(blue_wins ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data, family = "binomial")
+summary(regression_lol5)
 
 # Does teamwork payoff?
 regression_clean_lol_data5 <- glm(blue_wins ~ blue_kills*blue_assists, data=clean_lol_data, family = "binomial")
@@ -169,7 +205,6 @@ plot1 <- ggplot(plot_log, aes(x=avg_level_diff)) +
   geom_point(aes(y=as.numeric(blue_wins)), alpha = 0.2) +
   NULL
 plot1
-
 ```
 
 
@@ -223,14 +258,21 @@ clean_lol_data %>% group_by(blue_wins) %>%
                values_to = "value") %>% 
   ggplot(.,aes(x = feature, y = value)) + 
   geom_col(aes(fill = blue_wins), position = "dodge") +
-  scale_fill_manual(values = c("red","blue"), labels=c("Red Team Wins", "Blue Team Wins"))+
+  scale_fill_manual(values = c("#e63946","#0466c8"), labels=c("Red Team Wins", "Blue Team Wins"))+
   theme_minimal() +
+  coord_flip() + 
   labs(
     title = "Towers Destroyed is the Most Significant Determinant",
     subtitle = "Number of Kills and Detroys for All Objects in Game",
     y = "Average Number of Kills/Destroys",
     x = "")+
-  theme(legend.title=element_blank())
+   theme(
+    text=element_text(size=12, family="Lato"),
+    plot.title =element_text(face='bold'),
+    plot.subtitle = element_text(face='italic', size=10),
+    axis.text = element_text(angle = 0, hjust = 0.5, size = 10),
+    legend.title=element_blank()
+  ) 
 ```
 
 ```{r}
