@@ -29,13 +29,23 @@ As not all of us were familiar with the League of Legends game, we had to conduc
 (3) Methodology. What did you do, and how did you do it? What statistical techniques did you use —
 for instance, scatterplots, correlation, confidence intervals, linear/logistic regression?
 
+After loading, inspecting and cleaning the dataset we conducted some basic exploratory data analysis (EDA) by plotting pairwise correlations, linear and logistic regression models to investigate the underlying relationships between independent variables and with the dependent variable (which team wins).
+
 (4) Results and conclusions. This is where you summarise and present your data analyses and
 communicate your main results. What did you find out? This might include tables, graphs, or verbal
 summaries. What did you learn about the problem or question you set out to investigate?
 
+What we learnt is that statistically it is very clear to predict which team has the advantage, and therefore their chance of winning, after only 10 minutes of a game that can last 30-40 minutes.
+
+In the interests of a players efficiency, choosing to surrender after 10 minutes may be a wise move despite the fact it locks in a loss, but saves the players the additional time of playing a game that they are highly likely to lose.
+
 (5) Discussion and critique. What did you learn about the process of carrying out your project? What
 went wrong, and how could you improve it next time? For instance, did any sources of bias creep into
 your survey or experiment? What advice would you give future students? 
+
+League of Legends is a popular game. According to LeagueFeed, it had over 100 million players in 2020.
+However, many of our team were not very familiar with the game and this made the process of storytelling and turning data into valuable insight quite challenging, especially if our audience is those who are highly knowledgable and skilled at the game. One benefit of this situation though is that most of us would be quite unbiased when it comes to recommending a game strategy because we do not have personal anecdotal experience that may influence which conclusions we wish to draw.
+Moreover, we obtained this dataset from Kaggle and some cleaning had already been done. While this was helpful for us, it also meant we have less transparency and understanding of the original dataset and must have faith in the integrity of whoever uploaded it.
 
 ```{r libraries, include=FALSE}
 library(tidyverse)
@@ -156,7 +166,7 @@ head(plot_log)
 plot1 <- ggplot(plot_log, aes(x=avg_level_diff)) +
   geom_line(aes(y= .fitted), color = "blue") +
   labs(x="Experience Differential", y = "Blue Wins") +
-  geom_point(aes(y=blue_wins), alpha = 0.2) +
+  geom_point(aes(y=as.numeric(blue_wins)), alpha = 0.2) +
   NULL
 plot1
 
@@ -223,5 +233,23 @@ clean_lol_data %>% group_by(blue_wins) %>%
   theme(legend.title=element_blank())
 ```
 
+```{r}
+clean_lol_data %>% group_by(blue_kills) %>%
+  summarise(prop_wins=(count(blue_wins=1)/(count(blue_wins=1)+count(blue_wins=0))))
+
  
+  
+  
+  
+  ggplot(.,aes(x = feature, y = value)) + 
+  geom_col(aes(fill = blue_wins), position = "dodge") +
+  scale_fill_manual(values = c("red","blue"), labels=c("Red Team Wins", "Blue Team Wins"))+
+  theme_minimal() +
+  labs(
+    title = "Towers Destroyed is the Most Significant Determinant",
+    subtitle = "Number of Kills and Detroys for All Objects in Game",
+    y = "Average Number of Kills/Destroys",
+    x = "")+
+  theme(legend.title=element_blank())
+```
  
