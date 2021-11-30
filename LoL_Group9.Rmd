@@ -187,15 +187,12 @@ plot1 <- ggplot(plot_log, aes(x=avg_level_diff)) +
   NULL
 plot1
 ```
-<<<<<<< HEAD
-=======
 
 ## Results and Visualizations 
 
 What we learnt is that statistically it is very clear to predict which team has the advantage, and therefore their chance of winning, after only 10 minutes of a game that can last 30-40 minutes.
 
 In the interests of a players efficiency, choosing to surrender after 10 minutes may be a wise move despite the fact it locks in a loss, but saves the players the additional time of playing a game that they are highly likely to lose.
->>>>>>> fffb885b71a445adfaee6fb2bb71218557c9f892
 
 ```{r Sarah}
 clean_lol_data %>% ggplot(aes(x = blue_gold_per_min, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
@@ -265,7 +262,7 @@ clean_lol_data %>% group_by(blue_wins) %>%
 ```
 
 ```{r}
-  ggplot(.,aes(x = feature, y = value)) + 
+  ggplot(clean_lol_data,aes(x = feature, y = value)) + 
   geom_col(aes(fill = blue_wins), position = "dodge") +
   scale_fill_manual(values = c("red","blue"), labels=c("Red Team Wins", "Blue Team Wins"))+
   theme_minimal() +
@@ -283,15 +280,28 @@ clean_lol_data %>%
   pivot_longer(cols = c("elite_diff","dragon_diff", "heralds_diff", "towers_diff"), names_to = "feature", values_to = "value") %>% 
   ggplot(.,aes(x = feature, y = value)) +
   geom_violin(aes(fill = feature)) +
-  scale_fill_brewer(palette = 1)
+  scale_fill_brewer(palette = 1) +
   theme_minimal() +
   labs(
     title = "",
     subtitle = "Distribution of Activity Differences",
     y = "",
-    x = "")+
+    x = "") +
   theme(legend.title=element_blank())
   
 ```
+
+```{r tower_win_rate}
+clean_lol_data %>% 
+  mutate(blue_tower_cat = case_when(blue_towers_destroyed == 0 ~ '0',
+                                    blue_towers_destroyed == 1 ~ '1',
+                                    T ~ '2+')) %>% 
+  group_by(blue_tower_cat) %>% 
+  summarise(blue_win_rate = sum(blue_wins == '1')/n() * 100) %>% 
+  ggplot(aes(x = blue_win_rate, y = blue_tower_cat)) +
+  geom_col() +
+  NULL
+```
+
  
 
