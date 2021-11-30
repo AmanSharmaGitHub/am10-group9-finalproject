@@ -11,6 +11,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+<<<<<<< HEAD
 (1) A statement of the question or purpose. What problems or questions
     did you set out to analyse? What were the key issues raised?
 
@@ -85,6 +86,23 @@ Kaggle and some cleaning had already been done. While this was helpful
 for us, it also meant we have less transparency and understanding of the
 original dataset and must have faith in the integrity of whoever
 uploaded it.
+=======
+## League of Legends: 
+
+League of Legends is a Multiplayer Online Battle Arena (MOBA) game. Our dataset holds data on the first 10 minutes of 10,000 games. All of these games are diamond-ranked, which means the players are in the top 1.5% to 0.19% of players worldwide. The game lasts approximately 20 to 40 mins, there are two teams (Red vs Blue), with 5 players each. The goal of the game is to take down the enemy Nexus.
+
+## Our purpose: 
+
+Our purpose is to explore what is the best strategy in the first 10mins of playing, to win League of Legends.
+
+## How did we prepare? 
+
+As not all of us were familiar with the League of Legends game, we had to conduct some research to really understand the game and the variables in the dataset. All our group members played the game to immerse ourselves in the League of Legends world and understand what stories could be told from the data.
+
+## Discussion and Critique (to  be put at the end of the doc once finished - if not every time we commit it gives errors)
+
+League of Legends is a popular game. According to LeagueFeed, it had over 100 million players in 2020. However, many of our team were not very familiar with the game and this made the process of storytelling and turning data into valuable insight quite challenging, especially if our audience is those who are highly knowledgable and skilled at the game. One benefit of this situation though is that most of us would be quite unbiased when it comes to recommending a game strategy because we do not have personal anecdotal experience that may influence which conclusions we wish to draw. Moreover, we obtained this dataset from Kaggle and some cleaning had already been done. While this was helpful for us, it also meant we have less transparency and understanding of the original dataset and must have faith in the integrity of whoever uploaded it.
+>>>>>>> f6366730c19f2385decef27f158c664627e792bc
 
 ```{r libraries, include=FALSE}
 library(tidyverse)
@@ -99,7 +117,21 @@ library(caret)
 loadfonts(device="pdf") 
 ```
 
+<<<<<<< HEAD
 ## Loading the Dataset
+=======
+## Loading and Cleaning the Data
+
+The main variables in our data are:
+
+-   Game_ID: unique identifier for each game
+
+-   Blue_wins: '1' if the Blue Team won the game, '0' if the Red team won.
+
+-   Other 19 variables per team (38 total): Statistics and features of the game collected after 10 minutes of playing. These include number of kills, deaths, average experience and more.
+
+After loading, inspecting and cleaning the dataset we conducted some basic exploratory data analysis (EDA) by plotting pairwise correlations, linear and logistic regression models to investigate the underlying relationships between independent variables and with the dependent variable (which team wins).
+>>>>>>> f6366730c19f2385decef27f158c664627e792bc
 
 ```{r}
 #Loading the dataset
@@ -111,8 +143,11 @@ raw_lol_data <- raw_lol_data %>%
   drop_na()
 ```
 
+<<<<<<< HEAD
 # Cleaning the Data
 
+=======
+>>>>>>> f6366730c19f2385decef27f158c664627e792bc
 ```{r Vera}
 
 # Checking that variables are all stored as the right type 
@@ -242,6 +277,15 @@ plot1 <- ggplot(plot_log, aes(x=avg_level_diff)) +
 plot1
 ```
 
+<<<<<<< HEAD
+=======
+## Results and Visualizations 
+
+What we learnt is that statistically it is very clear to predict which team has the advantage, and therefore their chance of winning, after only 10 minutes of a game that can last 30-40 minutes.
+
+In the interests of a players efficiency, choosing to surrender after 10 minutes may be a wise move despite the fact it locks in a loss, but saves the players the additional time of playing a game that they are highly likely to lose.
+
+>>>>>>> f6366730c19f2385decef27f158c664627e792bc
 ```{r Sarah}
 clean_lol_data %>% ggplot(aes(x = blue_gold_per_min, y = blue_assists, colour = factor(blue_wins), fill = factor(blue_wins))) +
   geom_point(alpha = 0.1) +
@@ -310,7 +354,7 @@ clean_lol_data %>% group_by(blue_wins) %>%
 ```
 
 ```{r}
-  ggplot(.,aes(x = feature, y = value)) + 
+  ggplot(clean_lol_data,aes(x = feature, y = value)) + 
   geom_col(aes(fill = blue_wins), position = "dodge") +
   scale_fill_manual(values = c("red","blue"), labels=c("Red Team Wins", "Blue Team Wins"))+
   theme_minimal() +
@@ -322,18 +366,37 @@ clean_lol_data %>% group_by(blue_wins) %>%
   theme(legend.title=element_blank())
 ```
 
+
 ```{r}
 clean_lol_data %>% 
   pivot_longer(cols = c("elite_diff","dragon_diff", "heralds_diff", "towers_diff"), names_to = "feature", values_to = "value") %>% 
   ggplot(.,aes(x = feature, y = value)) +
   geom_violin(aes(fill = feature)) +
-  scale_fill_brewer(palette = 1)
+  scale_fill_brewer(palette = 1) +
   theme_minimal() +
   labs(
     title = "",
     subtitle = "Distribution of Activity Differences",
     y = "",
-    x = "")+
+    x = "") +
   theme(legend.title=element_blank())
   
 ```
+<<<<<<< HEAD
+=======
+
+```{r tower_win_rate}
+clean_lol_data %>% 
+  mutate(blue_tower_cat = case_when(blue_towers_destroyed == 0 ~ '0',
+                                    blue_towers_destroyed == 1 ~ '1',
+                                    T ~ '2+')) %>% 
+  group_by(blue_tower_cat) %>% 
+  summarise(blue_win_rate = sum(blue_wins == '1')/n() * 100) %>% 
+  ggplot(aes(x = blue_win_rate, y = blue_tower_cat)) +
+  geom_col() +
+  NULL
+```
+
+ 
+
+>>>>>>> f6366730c19f2385decef27f158c664627e792bc
