@@ -135,6 +135,7 @@ Corr
 ### Linear and Logistic Regression Models
 
 ```{r linear_regression}
+
 # distribution of gold & exp difference by outcome
 clean_lol_data %>% 
   ggplot(aes(x = blue_gold_diff, y = blue_experience_diff, color = blue_wins)) +
