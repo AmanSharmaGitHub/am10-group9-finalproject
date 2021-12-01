@@ -49,11 +49,8 @@ library(sf)
 library(GGally)
 library(rsample)
 library(caret)
-<<<<<<< HEAD
 library(janitor)
-=======
 library(corrplot)
->>>>>>> c68fe147e93c29dad71956e18b0bfec3fbb54b59
 
 loadfonts(device="pdf") 
 ```
@@ -283,11 +280,7 @@ clean_lol_data %>% group_by(blue_wins) %>%
             avg_dragons, avg_heralds, avg_towers_destroyed), 
                names_to = "feature", 
                values_to = "value") %>% 
-<<<<<<< HEAD
   ggplot(.,aes(x = fct_reorder(feature, value), y = value)) + 
-=======
-  ggplot(aes(x = feature, y = value)) + 
->>>>>>> c68fe147e93c29dad71956e18b0bfec3fbb54b59
   geom_col(aes(fill = blue_wins), position = "dodge") +
   scale_fill_manual(values = c("#e63946","#0466c8"), labels=c("Red Team Wins", "Blue Team Wins"))+
   theme_minimal() +
@@ -332,26 +325,6 @@ clean_lol_data %>%
 ```{r}
 clean_lol_data %>% group_by(blue_wins) %>% 
   summarise(
-<<<<<<< HEAD
-            avg_wards_placed = mean(blue_wards_placed),
-            avg_wards_destroyed = mean(blue_wards_destroyed),
-            avg_minions = mean(blue_total_minions_killed),
-            avg_jungle = mean(blue_total_jungle_minions_killed),
-            avg_elite_monsters = mean(elite_diff), 
-            avg_dragons = mean(dragon_diff),
-            avg_heralds = mean(heralds_diff),
-            avg_towers_destroyed = mean(towers_diff)) %>% 
-  pivot_longer(cols = c(
-            avg_wards_placed, avg_wards_destroyed,
-            avg_minions,
-            avg_jungle,
-            avg_elite_monsters, 
-            # avg_dragons, avg_heralds, 
-            avg_towers_destroyed), 
-               names_to = "feature", 
-               values_to = "value") %>% 
-  ggplot(.,aes(x = feature, y = value)) + 
-=======
             # avg_wards_placed = mean(blue_wards_placed), 
             # avg_wards_destroyed = mean(blue_wards_destroyed), 
             # avg_minions = mean(blue_total_minions_killed),
@@ -366,7 +339,6 @@ clean_lol_data %>% group_by(blue_wins) %>%
                names_to = "feature", 
                values_to = "value") %>%  
 ggplot(aes(x = feature, y = value)) + 
->>>>>>> c68fe147e93c29dad71956e18b0bfec3fbb54b59
   geom_col(aes(fill = blue_wins), position = "dodge") +
   scale_fill_manual(values = c("#e63946","#0466c8"), labels=c("Red Team Wins", "Blue Team Wins"))+
   theme_minimal() +
@@ -386,7 +358,6 @@ ggplot(aes(x = feature, y = value)) +
 ```
 
 ```{r}
-<<<<<<< HEAD
 clean_lol_data %>% group_by(blue_wins) %>% 
   summarise(
             avg_wards_placed = mean(blue_wards_placed),
@@ -409,13 +380,6 @@ clean_lol_data %>% group_by(blue_wins) %>%
   scale_x_discrete(labels = c("Wards Destroyed",'Wards Placed','Jungle Minions Killed', 'Minions Killed'))+
   geom_col(aes(fill = blue_wins), position = "dodge") +
   scale_fill_manual(values = c("#e63946","#0466c8"), labels=c("Red Team Wins", "Blue Team Wins"))+
-=======
-clean_lol_data %>% 
-  pivot_longer(cols = c("elite_diff","dragon_diff", "heralds_diff", "towers_diff"), names_to = "feature", values_to = "value") %>% 
-  ggplot(.,aes(x = feature, y = value)) +
-  geom_violin(aes(fill = feature)) +
-  scale_fill_brewer(palette = 1) +
->>>>>>> c68fe147e93c29dad71956e18b0bfec3fbb54b59
   theme_minimal() +
   coord_flip() + 
   labs(
@@ -525,7 +489,7 @@ clean_lol_data %>% group_by(blue_wins) %>%
   ) +
   # add the text label on the graph
   geom_text(
-    data = data.frame(x = 1.5, y = 2.5, label = "Towers are destroyed more than 3 times in \n won ames than lost ones."),
+    data = data.frame(x = 1.5, y = 2.5, label = "Towers are destroyed more than 3 times in \n won games than lost ones."),
     aes(x = x, y = y, label = label, fontface = "italic"),
     colour = "#6f6866",
     family="Lato",
