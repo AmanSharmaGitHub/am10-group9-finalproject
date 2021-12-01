@@ -56,6 +56,7 @@ library(sf)
 library(GGally)
 library(rsample)
 library(caret)
+library(janitor)
 
 loadfonts(device="pdf") 
 ```
@@ -240,16 +241,80 @@ clean_lol_data %>% ggplot(aes(x = blue_kills, y = blue_assists, colour = factor(
 clean_lol_data %>% group_by(blue_wins) %>% 
   summarise(
             # avg_wards_placed = mean(blue_wards_placed), 
-            # avg_wards_destroyed = mean(blue_wards_destroyed), 
+            # avg_wards_destroyed = mean(blue_wards_destroyed),
             # avg_minions = mean(blue_total_minions_killed),
-            avg_elite_monsters = mean(blue_elite_monsters), 
+            # avg_elite_monsters = mean(blue_elite_monsters), 
             avg_dragons = mean(blue_dragons), 
             avg_heralds = mean(blue_heralds), 
             avg_towers_destroyed = mean(blue_towers_destroyed)) %>% 
   pivot_longer(cols = c(
-            # avg_wards_placed, avg_wards_destroyed, 
+            # avg_wards_placed,
+            # avg_wards_destroyed,
             # avg_minions,
-            avg_elite_monsters, avg_dragons, avg_heralds, avg_towers_destroyed), 
+            # avg_elite_monsters, 
+            avg_dragons, avg_heralds, avg_towers_destroyed), 
+               names_to = "feature", 
+               values_to = "value") %>% 
+  ggplot(.,aes(x = fct_reorder(feature, value), y = value)) + 
+  geom_col(aes(fill = blue_wins), position = "dodge") +
+  scale_fill_manual(values = c("#e63946","#0466c8"), labels=c("Red Team Wins", "Blue Team Wins"))+
+  theme_minimal() +
+  coord_flip() + 
+  labs(
+    title = "Dragons are Killed the Most Often for Both Game Results",
+    subtitle = "Number of Kills and Destroys for Dragons, Heralds, and Towers",
+    y = "",
+    x = "")+
+   theme(
+    text=element_text(size=12, family="Lato"),
+    plot.title =element_text(face='bold'),
+    plot.subtitle = element_text(face='italic', size=10),
+    axis.text = element_text(angle = 0, hjust = 0.5, size = 10),
+    legend.title=element_blank()
+  ) +
+  scale_x_discrete(labels = c("Towers Destroyed", "Heralds Killed", "Dragons Killed"))
+```
+
+```{r}
+clean_lol_data %>% 
+  pivot_longer(cols = c("elite_diff","dragon_diff", "heralds_diff", "towers_diff"), names_to = "feature", values_to = "value") %>% 
+  ggplot(.,aes(x = feature, y = value)) +
+  geom_violin(aes(fill = feature)) +
+  theme_minimal() +
+  labs(
+    title = "",
+    subtitle = "Distribution of Activity Differences",
+    y = "",
+    x = "")+
+  theme(legend.title=element_blank())+
+  theme(
+    text=element_text(size=12, family="Lato"),
+    plot.title =element_text(face='bold'),
+    plot.subtitle = element_text(face='italic', size=10),
+    axis.text = element_text(angle = 0, hjust = 0.5, size = 10),
+    legend.title=element_blank()
+  ) 
+  
+```
+
+```{r}
+clean_lol_data %>% group_by(blue_wins) %>% 
+  summarise(
+            avg_wards_placed = mean(blue_wards_placed),
+            avg_wards_destroyed = mean(blue_wards_destroyed),
+            avg_minions = mean(blue_total_minions_killed),
+            avg_jungle = mean(blue_total_jungle_minions_killed),
+            avg_elite_monsters = mean(elite_diff), 
+            avg_dragons = mean(dragon_diff),
+            avg_heralds = mean(heralds_diff),
+            avg_towers_destroyed = mean(towers_diff)) %>% 
+  pivot_longer(cols = c(
+            avg_wards_placed, avg_wards_destroyed,
+            avg_minions,
+            avg_jungle,
+            avg_elite_monsters, 
+            # avg_dragons, avg_heralds, 
+            avg_towers_destroyed), 
                names_to = "feature", 
                values_to = "value") %>% 
   ggplot(.,aes(x = feature, y = value)) + 
@@ -258,9 +323,9 @@ clean_lol_data %>% group_by(blue_wins) %>%
   theme_minimal() +
   coord_flip() + 
   labs(
-    title = "Towers Destroyed is the Most Significant Determinant",
-    subtitle = "Number of Kills and Detroys for All Objects in Game",
-    y = "Average Number of Kills/Destroys",
+    title = "",
+    subtitle = "",
+    y = "Average Number of Destroys",
     x = "")+
    theme(
     text=element_text(size=12, family="Lato"),
@@ -272,31 +337,146 @@ clean_lol_data %>% group_by(blue_wins) %>%
 ```
 
 ```{r}
-  ggplot(.,aes(x = feature, y = value)) + 
+clean_lol_data %>% group_by(blue_wins) %>% 
+  summarise(
+            avg_wards_placed = mean(blue_wards_placed),
+            avg_wards_destroyed = mean(blue_wards_destroyed),
+            avg_minions = mean(blue_total_minions_killed),
+            avg_jungle = mean(blue_total_jungle_minions_killed),
+            # avg_elite_monsters = mean(blue_elite_monsters), 
+            # avg_dragons = mean(blue_dragons), 
+            # avg_heralds = mean(blue_heralds), 
+            # avg_towers_destroyed = mean(blue_towers_destroyed)
+            ) %>% 
+  pivot_longer(cols = c(
+            avg_wards_placed, avg_wards_destroyed,
+            avg_minions, avg_jungle
+            # avg_elite_monsters, avg_dragons, avg_heralds, avg_towers_destroyed
+            ), 
+               names_to = "feature", 
+               values_to = "value") %>% 
+  ggplot(.,aes(x = fct_reorder(feature, value), y = value)) + 
+  scale_x_discrete(labels = c("Wards Destroyed",'Wards Placed','Jungle Minions Killed', 'Minions Killed'))+
   geom_col(aes(fill = blue_wins), position = "dodge") +
-  scale_fill_manual(values = c("red","blue"), labels=c("Red Team Wins", "Blue Team Wins"))+
+  scale_fill_manual(values = c("#e63946","#0466c8"), labels=c("Red Team Wins", "Blue Team Wins"))+
   theme_minimal() +
+  coord_flip() + 
   labs(
-    title = "Towers Destroyed is the Most Significant Determinant",
-    subtitle = "Number of Kills and Detroys for All Objects in Game",
-    y = "Average Number of Kills/Destroys",
-    x = "")+
-  theme(legend.title=element_blank())
-```
-
-```{r}
-clean_lol_data %>% 
-  pivot_longer(cols = c("elite_diff","dragon_diff", "heralds_diff", "towers_diff"), names_to = "feature", values_to = "value") %>% 
-  ggplot(.,aes(x = feature, y = value)) +
-  geom_violin(aes(fill = feature)) +
-  scale_fill_brewer(palette = 1)
-  theme_minimal() +
-  labs(
-    title = "",
-    subtitle = "Distribution of Activity Differences",
+    title = "Interactions with Wards and Minions are Stable Despite Results",
+    subtitle = "Number of Placements and Detroys for Wards and Minions",
     y = "",
     x = "")+
-  theme(legend.title=element_blank())
-  
+   theme(
+    text=element_text(size=12, family="Lato"),
+    plot.title =element_text(face='bold'),
+    plot.subtitle = element_text(face='italic', size=10),
+    axis.text = element_text(angle = 0, hjust = 0.5, size = 10),
+    legend.title=element_blank()
+  )
 ```
+
+
+```{r}
+clean_lol_data %>% group_by(blue_wins) %>% 
+  summarise(
+            # avg_wards_placed = mean(blue_wards_placed),
+            # avg_wards_destroyed = mean(blue_wards_destroyed),
+            # avg_minions = mean(blue_total_minions_killed),
+            # avg_jungle = mean(blue_total_jungle_minions_killed),
+            avg_elite_monsters = mean(elite_diff), 
+            avg_dragons = mean(dragon_diff),
+            avg_heralds = mean(heralds_diff),
+            avg_towers_destroyed = mean(towers_diff)) %>% 
+  pivot_longer(cols = c(
+            # avg_wards_placed, avg_wards_destroyed,
+            # avg_minions,
+            # avg_jungle,
+            avg_elite_monsters, 
+            avg_dragons, avg_heralds,
+            avg_towers_destroyed), 
+               names_to = "feature", 
+               values_to = "value") %>% 
+  ggplot(.,aes(x = feature, y = value)) + 
+  geom_col(aes(fill = blue_wins), position = "dodge") +
+  scale_fill_manual(values = c("#e63946","#0466c8"), labels=c("Red Team Wins", "Blue Team Wins"))+
+  theme_minimal() +
+  coord_flip() + 
+  labs(
+    title = "",
+    subtitle = "",
+    y = "Average Number of Destroys",
+    x = "")+
+   theme(
+    text=element_text(size=12, family="Lato"),
+    plot.title =element_text(face='bold'),
+    plot.subtitle = element_text(face='italic', size=10),
+    axis.text = element_text(angle = 0, hjust = 0.5, size = 10),
+    legend.title=element_blank()
+  ) 
+```
+
+
+
+```{r}
+clean_lol_data %>% group_by(blue_wins) %>% 
+  summarise(
+            avg_wards_placed = mean(blue_wards_placed),
+            avg_wards_destroyed = mean(blue_wards_destroyed),
+            avg_minions = mean(blue_total_minions_killed),
+            # avg_elite_monsters = mean(blue_elite_monsters),
+            avg_dragons = mean(blue_dragons), 
+            avg_heralds = mean(blue_heralds), 
+            avg_towers_destroyed = mean(blue_towers_destroyed)) %>% 
+  pivot_longer(cols = c(
+            avg_wards_placed, avg_wards_destroyed,
+            avg_minions,
+            # avg_elite_monsters,
+            avg_dragons, avg_heralds, avg_towers_destroyed), 
+               names_to = "feature", 
+               values_to = "value") %>% 
+  pivot_wider(names_from = "blue_wins", values_from = "value") %>% 
+  clean_names() %>% 
+  mutate(destroy_ratio = x1/x0, if_tower = if_else(feature == "avg_towers_destroyed", "yes", "no")) %>% 
+  ggplot(.,aes(x = fct_reorder(feature, destroy_ratio), y = destroy_ratio, fill = if_tower)) + 
+  geom_col() +
+  theme_minimal() +
+  coord_flip() + 
+  labs(
+    title = "Towers Destroyed is the Most Significant Differentiator",
+    subtitle = "Won-Lost Ratio of Interactions for All Objects in Game",
+    y = "",
+    x = "")+
+   theme(
+    text=element_text(size=12, family="Lato"),
+    plot.title =element_text(face='bold'),
+    plot.subtitle = element_text(face='italic', size=10),
+    axis.text = element_text(angle = 0, hjust = 0.5, size = 10),
+    legend.title=element_blank(), 
+    legend.position = "none"
+  ) +
+  scale_x_discrete(labels = c("Wards Placed", "Minions Killed", "Wards Destroyed", "Heralds Killed", "Dragons Killed", "Towers Destroyed"))+
+  scale_fill_manual(values = c("grey80","#0466c8")) +
+  #add a curve to draw attention to a value
+  geom_curve(
+    data = data.frame(x = 2, y = 2.5, xend = 5, yend = 3),
+    mapping = aes(x = x, y = y, xend = xend, yend = yend),
+    colour = "#6f6866",
+    size = 0.5,
+    curvature = 0.25,
+    arrow = arrow(length = unit(1.8, "mm"), type = "closed"),
+    inherit.aes = FALSE
+  ) +
+  # add the text label on the graph
+  geom_text(
+    data = data.frame(x = 1.5, y = 2.5, label = "Towers are destroyed more than 3 times in \n won ames than lost ones."),
+    aes(x = x, y = y, label = label, fontface = "italic"),
+    colour = "#6f6866",
+    family="Lato",
+    hjust = 0.5,
+    lineheight = .8,
+    inherit.aes = FALSE
+  )
+
+```
+ 
  
