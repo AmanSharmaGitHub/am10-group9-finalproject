@@ -145,10 +145,10 @@ clean_lol_data %>%
   NULL
 
 # Linear regression to predict gold_diff and exp_diff
-model_linear_gold <- lm(blue_gold_diff ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
+model_linear_gold <- lm(blue_gold_diff ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
 summary(model_linear_gold)
 
-model_linear_exp <- lm(blue_experience_diff ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
+model_linear_exp <- lm(blue_experience_diff ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff  + jg_diff + blue_KDA + red_KDA, data = clean_lol_data)
 summary(model_linear_exp)
 
 plot(model_linear_gold)
@@ -161,7 +161,7 @@ control <- trainControl (
     verboseIter=TRUE)
 
 model_linear_gold_cv<-train(
-    blue_gold_diff ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA,
+    blue_gold_diff ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + heralds_diff + towers_diff  + jg_diff + blue_KDA + red_KDA,
     clean_lol_data,
    method = "lm",
     trControl = control
@@ -196,10 +196,10 @@ regression_clean_lol_data4 <- glm(blue_wins ~ blue_first_blood + blue_kills + bl
 summary(regression_clean_lol_data4)
 
 # LR huge model
-regression_lol5 <- glm(blue_wins ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data, family = "binomial")
+regression_lol5 <- glm(blue_wins ~ blue_first_blood + kill_diff + wards_diff + elite_diff + dragon_diff + towers_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data, family = "binomial")
 summary(regression_lol5)
 
-regression_lol6 <- glm(blue_wins ~ kill_diff + elite_diff + dragon_diff + towers_diff + cs_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data, family = "binomial")
+regression_lol6 <- glm(blue_wins ~ kill_diff + elite_diff + dragon_diff + towers_diff + jg_diff + blue_KDA + red_KDA, data = clean_lol_data, family = "binomial")
 summary(regression_lol6)
 
 # Does teamwork payoff?
